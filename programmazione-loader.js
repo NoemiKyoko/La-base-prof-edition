@@ -140,7 +140,7 @@
 
       .planning-back,
       .planning-today,
-      .planning-sticker-button { display:none !important;
+      .planning-sticker-button {
         appearance: none;
         border: 0;
         height: 48px;
@@ -756,3 +756,6 @@
     avviaProgrammazione();
   }
 })();
+
+/* Prof Edition V1.1 — il tasto Indietro deve essere sempre disponibile */
+.planning-back { display: inline-grid !important; place-items: center; }

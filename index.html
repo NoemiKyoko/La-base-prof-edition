@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
   <title>La Base — Prof Edition</title>
 
@@ -180,11 +180,11 @@
     }
 
     .archive-screen.documents {
-      background: #eaf6fb;
+      background: #eef0eb;
     }
 
     .archive-screen.projects {
-      background: #eef8ef;
+      background: #f1f2e9;
     }
 
     .archive-header {
@@ -201,11 +201,11 @@
     }
 
     .archive-screen.documents .archive-header {
-      background: #d8eef7;
+      background: #d7ddd5;
     }
 
     .archive-screen.projects .archive-header {
-      background: #dcefdc;
+      background: #dde3ce;
     }
 
     .archive-back,
@@ -454,10 +454,10 @@
         16px
         max(22px, env(safe-area-inset-left));
 
-      background: #e2daf2;
+      background: #d9dfcf;
 
       border-bottom:
-        1px solid rgba(73, 57, 112, 0.10);
+        1px solid rgba(70, 81, 63, 0.12);
     }
 
     .ideas-back,
@@ -474,7 +474,7 @@
       border-radius: 16px;
 
       background: rgba(255, 255, 255, 0.72);
-      color: #4c4274;
+      color: #46513f;
 
       font-size: 28px;
       line-height: 1;
@@ -494,7 +494,7 @@
 
       margin: 0;
 
-      color: #4c4274;
+      color: #46513f;
 
       font-size: clamp(25px, 4vw, 40px);
       font-weight: 700;
@@ -568,7 +568,7 @@
       border-radius: 12px;
 
       background: rgba(255, 255, 255, 0.72);
-      color: #4c4274;
+      color: #46513f;
 
       font-size: 25px;
       line-height: 1;
@@ -584,7 +584,7 @@
     .page-counter {
       min-width: 70px;
 
-      color: #4c4274;
+      color: #46513f;
 
       font-size: 15px;
       font-weight: 700;
@@ -1315,8 +1315,60 @@
       display: none !important;
     }
 
+  
+    /* =========================
+       PROF EDITION V1.1 — PALETTE & TABLET
+    ========================== */
+    .archive-screen.documents .archive-title,
+    .archive-screen.documents .archive-back,
+    .archive-screen.documents .archive-add,
+    .archive-screen.projects .archive-title,
+    .archive-screen.projects .archive-back,
+    .archive-screen.projects .archive-add {
+      color: #34483a !important;
+    }
+
+    .archive-screen.documents .archive-header,
+    .archive-screen.projects .archive-header {
+      border-bottom-color: rgba(52,72,58,.12) !important;
+    }
+
+    .ideas-screen {
+      background: #f1f2ec !important;
+    }
+
+    .ideas-header {
+      background: #d9dfcf !important;
+      border-bottom-color: rgba(70,81,63,.12) !important;
+    }
+
+    .ideas-title,
+    .ideas-back,
+    .ideas-add,
+    .ideas-delete {
+      color: #46513f !important;
+    }
+
+    /* Pointer Events è lo standard usato da Android, Windows e iPad.
+       Evitiamo selezioni/zoom accidentali durante scrittura e trascinamento. */
+    .hotspot,
+    .archive-back,
+    .archive-add,
+    .ideas-back,
+    .ideas-add,
+    .ideas-delete,
+    .schedule-back,
+    .schedule-clear {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    button, .hotspot {
+      touch-action: manipulation;
+    }
+
   </style>
-<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="La Base — Prof Edition">
 
@@ -5083,10 +5135,10 @@
       .ideas-header .ideas-add,.ideas-header .ideas-delete{display:none!important}
       .idea-draw-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:auto;touch-action:none}
       .idea-sticker-layer{z-index:3!important}
-      .idea-final-tools{position:fixed;left:max(18px,env(safe-area-inset-left));bottom:max(18px,env(safe-area-inset-bottom));z-index:880;display:flex;align-items:center;gap:1px;padding:6px 7px 6px 22px;border:1.25px solid #c9bce4;border-radius:17px;background:#f0ebfa;box-shadow:0 5px 14px rgba(70,55,90,.13);touch-action:none;user-select:none;-webkit-user-select:none}
-      .idea-final-grip{position:absolute;left:5px;top:50%;transform:translateY(-50%);width:16px;height:29px;display:grid;place-items:center;color:#8d80ad;font-weight:900;font-size:14px;cursor:grab;touch-action:none}
-      .idea-final-tools button{appearance:none;border:0;width:34px;height:34px;border-radius:9px;background:transparent;color:#4c4274;font-size:17px;font-weight:800;cursor:pointer}.idea-final-tools button.active{background:white;box-shadow:0 2px 7px rgba(45,50,60,.09)}.idea-final-tools button[data-t="eraser"]{display:grid;place-items:center}.idea-final-tools button[data-t="eraser"] svg{width:19px;height:19px;display:block;overflow:visible}
-      .idea-final-menu{position:fixed;z-index:910;display:none;min-width:190px;padding:8px;border:1px solid #d8cdea;border-radius:17px;background:#fffaf7;box-shadow:0 10px 30px rgba(35,45,60,.20)}.idea-final-menu.aperto{display:block}.idea-final-menu button{appearance:none;border:0;width:100%;padding:11px 13px;border-radius:11px;background:transparent;color:#4c4274;text-align:left;font-size:15px;font-weight:750}.idea-final-menu .danger{color:#94515d}
+      .idea-final-tools{position:fixed;left:max(18px,env(safe-area-inset-left));bottom:max(18px,env(safe-area-inset-bottom));z-index:880;display:flex;align-items:center;gap:1px;padding:6px 7px 6px 22px;border:1.25px solid #c5cfbd;border-radius:17px;background:#edf1e8;box-shadow:0 5px 14px rgba(70,55,90,.13);touch-action:none;user-select:none;-webkit-user-select:none}
+      .idea-final-grip{position:absolute;left:5px;top:50%;transform:translateY(-50%);width:16px;height:29px;display:grid;place-items:center;color:#788571;font-weight:900;font-size:14px;cursor:grab;touch-action:none}
+      .idea-final-tools button{appearance:none;border:0;width:34px;height:34px;border-radius:9px;background:transparent;color:#46513f;font-size:17px;font-weight:800;cursor:pointer}.idea-final-tools button.active{background:white;box-shadow:0 2px 7px rgba(45,50,60,.09)}.idea-final-tools button[data-t="eraser"]{display:grid;place-items:center}.idea-final-tools button[data-t="eraser"] svg{width:19px;height:19px;display:block;overflow:visible}
+      .idea-final-menu{position:fixed;z-index:910;display:none;min-width:190px;padding:8px;border:1px solid #d8cdea;border-radius:17px;background:#fffaf7;box-shadow:0 10px 30px rgba(35,45,60,.20)}.idea-final-menu.aperto{display:block}.idea-final-menu button{appearance:none;border:0;width:100%;padding:11px 13px;border-radius:11px;background:transparent;color:#46513f;text-align:left;font-size:15px;font-weight:750}.idea-final-menu .danger{color:#94515d}
       .idea-final-file{display:none}
       @media(max-width:760px){.idea-final-tools{left:10px;bottom:10px}}
     `;document.head.appendChild(style);
@@ -5096,9 +5148,9 @@
     const file=document.createElement("input");file.type="file";file.accept="image/*";file.className="idea-final-file";screen.appendChild(file);
     const ctx=canvas.getContext("2d");
     function size(){const r=wrap.getBoundingClientRect(),d=Math.max(1,window.devicePixelRatio||1);canvas.width=Math.round(r.width*d);canvas.height=Math.round(r.height*d);canvas.style.width=r.width+"px";canvas.style.height=r.height+"px";ctx.setTransform(d,0,0,d,0,0);render()}
-    function render(){const r=wrap.getBoundingClientRect();ctx.clearRect(0,0,r.width,r.height);ctx.lineCap="round";ctx.lineJoin="round";for(const st of strokes()){ctx.globalCompositeOperation=st.erase?"destination-out":"source-over";ctx.strokeStyle=st.color||"#4c4274";ctx.lineWidth=st.erase?18:2.4;ctx.beginPath();(st.points||[]).forEach((p,i)=>{const x=p.x*r.width,y=p.y*r.height;i?ctx.lineTo(x,y):ctx.moveTo(x,y)});ctx.stroke()}ctx.globalCompositeOperation="source-over"}
+    function render(){const r=wrap.getBoundingClientRect();ctx.clearRect(0,0,r.width,r.height);ctx.lineCap="round";ctx.lineJoin="round";for(const st of strokes()){ctx.globalCompositeOperation=st.erase?"destination-out":"source-over";ctx.strokeStyle=st.color||"#46513f";ctx.lineWidth=st.erase?18:2.4;ctx.beginPath();(st.points||[]).forEach((p,i)=>{const x=p.x*r.width,y=p.y*r.height;i?ctx.lineTo(x,y):ctx.moveTo(x,y)});ctx.stroke()}ctx.globalCompositeOperation="source-over"}
     function setMode(m){mode=m;tools.querySelectorAll('[data-t="pencil"],[data-t="eraser"]').forEach(b=>b.classList.toggle("active",b.dataset.t===m));canvas.style.pointerEvents=(m==="pencil"||m==="eraser")?"auto":"none"}
-    canvas.addEventListener("pointerdown",e=>{if(!["pencil","eraser"].includes(mode))return;e.preventDefault();e.stopPropagation();pushHistory();const r=canvas.getBoundingClientRect();drawing={erase:mode==="eraser",color:"#4c4274",points:[{x:(e.clientX-r.left)/r.width,y:(e.clientY-r.top)/r.height}]};canvas.setPointerCapture?.(e.pointerId)} ,{passive:false});
+    canvas.addEventListener("pointerdown",e=>{if(!["pencil","eraser"].includes(mode))return;e.preventDefault();e.stopPropagation();pushHistory();const r=canvas.getBoundingClientRect();drawing={erase:mode==="eraser",color:"#46513f",points:[{x:(e.clientX-r.left)/r.width,y:(e.clientY-r.top)/r.height}]};canvas.setPointerCapture?.(e.pointerId)} ,{passive:false});
     canvas.addEventListener("pointermove",e=>{if(!drawing)return;e.preventDefault();const r=canvas.getBoundingClientRect();drawing.points.push({x:(e.clientX-r.left)/r.width,y:(e.clientY-r.top)/r.height});const list=strokes();setStrokes([...list,drawing]);render();setStrokes(list)}, {passive:false});
     const end=e=>{if(!drawing)return;const list=strokes();list.push(drawing);setStrokes(list);drawing=null;try{canvas.releasePointerCapture?.(e.pointerId)}catch(_){}render()};canvas.addEventListener("pointerup",end);canvas.addEventListener("pointercancel",end);
     function placeMenu(btn){const r=btn.getBoundingClientRect();menu.style.left=Math.max(8,Math.min(innerWidth-menu.offsetWidth-8,r.left))+"px";menu.style.top=Math.max(8,r.top-190)+"px"}
