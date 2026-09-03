@@ -237,7 +237,7 @@
       .planning-month-title {
         margin: 0;
         text-align: center;
-        color: #315d91;
+        color: #465d4d;
         font-size: clamp(30px, 4.6vw, 62px);
         font-weight: 500;
         letter-spacing: .08em;
@@ -269,7 +269,7 @@
       }
 
       .planning-weekday {
-        color: #315d91;
+        color: #465d4d;
         font-size: clamp(14px, 1.7vw, 23px);
         font-weight: 700;
         letter-spacing: .08em;
@@ -308,7 +308,7 @@
         top: 7px;
         left: 9px;
         z-index: 2;
-        color: #315d91;
+        color: #465d4d;
         font-size: clamp(13px, 1.45vw, 20px);
         font-weight: 700;
         line-height: 1;
@@ -345,7 +345,7 @@
         font-weight: 600;
         line-height: 1.18;
         text-align: left;
-        caret-color: #315d91;
+        caret-color: #465d4d;
       }
 
       .planning-note:focus {
