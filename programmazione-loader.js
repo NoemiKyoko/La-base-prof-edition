@@ -757,5 +757,3 @@
   }
 })();
 
-/* Prof Edition V1.1 — il tasto Indietro deve essere sempre disponibile */
-.planning-back { display: inline-grid !important; place-items: center; }
