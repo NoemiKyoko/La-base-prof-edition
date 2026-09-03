@@ -117,8 +117,8 @@
         flex-direction: column;
         z-index: 235;
         overflow: hidden;
-        background: linear-gradient(180deg, #edf5ff 0%, #f6f3fb 100%);
-        color: #2f5688;
+        background: linear-gradient(180deg, #e5e8df 0%, #f1eee4 100%);
+        color: #46513f;
       }
 
       .planning-screen.aperto {
@@ -134,8 +134,8 @@
           max(18px, env(safe-area-inset-right))
           12px
           max(18px, env(safe-area-inset-left));
-        background: #dcecf8;
-        border-bottom: 1px solid rgba(47, 86, 136, 0.10);
+        background: #d9dfcf;
+        border-bottom: 1px solid rgba(70, 81, 63, 0.12);
       }
 
       .planning-back,
@@ -146,7 +146,7 @@
         height: 48px;
         border-radius: 16px;
         background: rgba(255,255,255,.82);
-        color: #2f5688;
+        color: #46513f;
         cursor: pointer;
         box-shadow: 0 5px 14px rgba(50,65,80,.10);
       }
@@ -168,7 +168,7 @@
       .planning-title {
         flex: 1;
         margin: 0;
-        color: #2f5688;
+        color: #46513f;
         font-size: clamp(24px, 3.5vw, 38px);
         font-weight: 700;
       }
@@ -228,7 +228,7 @@
         justify-self: center;
         border-radius: 15px;
         background: #edf3fa;
-        color: #2f5688;
+        color: #46513f;
         font-size: 28px;
         line-height: 1;
         cursor: pointer;
@@ -426,6 +426,15 @@
       .planning-picker-item { border:1px solid rgba(76,66,116,.1); border-radius:18px; background:#f8f7fb; padding:9px; color:#4c4274; font-weight:600; }
       .planning-picker-item img { display:block; width:100%; aspect-ratio:1; object-fit:contain; margin-bottom:6px; }
 
+
+      /* Prof Edition V1.4 — toolbar Programmazione */
+      .planning-draw-layer { position:absolute; inset:0; width:100%; height:100%; z-index:30; pointer-events:none; touch-action:none; border-radius:inherit; }
+      .planning-board.draw-active .planning-draw-layer { pointer-events:auto; }
+      .planning-drawbar { position:fixed; left:50%; bottom:max(18px,env(safe-area-inset-bottom)); transform:translateX(-50%); z-index:245; display:flex; align-items:center; gap:3px; padding:6px 8px; border:1.25px solid #aebba4; border-radius:17px; background:#eef1e9; box-shadow:0 5px 14px rgba(50,65,55,.13); }
+      .planning-drawbar button { border:0; width:36px; height:36px; border-radius:9px; background:transparent; color:#46513f; font-size:18px; font-weight:800; cursor:pointer; touch-action:manipulation; }
+      .planning-drawbar button.active { background:#fff; box-shadow:0 2px 7px rgba(45,50,60,.09); }
+      .planning-drawbar input[type=color] { width:34px; height:34px; padding:2px; border:0; background:transparent; }
+
       @media (max-width: 850px) {
         .planning-header { gap: 8px; }
         .planning-today { padding: 0 10px; }
@@ -453,6 +462,7 @@
 
       <div class="planning-workspace">
         <section class="planning-board" aria-label="Calendario di programmazione">
+          <canvas class="planning-draw-layer" aria-label="Disegno sulla programmazione"></canvas>
           <div class="planning-month-row">
             <button class="planning-month-nav" id="planningPrevMonth" type="button" aria-label="Mese precedente">‹</button>
             <h2 class="planning-month-title" id="planningMonthTitle"></h2>
@@ -462,6 +472,15 @@
           <div class="planning-weekdays" id="planningWeekdays"></div>
           <div class="planning-grid" id="planningGrid"></div>
         </section>
+      </div>
+
+      <div class="planning-drawbar" id="planningDrawbar" aria-label="Strumenti di scrittura">
+        <button type="button" data-draw="pen" title="Penna">✎</button>
+        <button type="button" data-draw="eraser" title="Gomma">⌫</button>
+        <input type="color" data-draw="color" value="#26372d" title="Colore penna">
+        <button type="button" data-draw="undo" title="Annulla">↶</button>
+        <button type="button" data-draw="redo" title="Ripristina">↷</button>
+        <button type="button" data-draw="clear" title="Cancella disegno">×</button>
       </div>
 
       <div class="planning-picker" id="planningPicker">
@@ -487,6 +506,13 @@
     const picker = screen.querySelector("#planningPicker");
     const pickerGrid = screen.querySelector("#planningPickerGrid");
     const pickerClose = screen.querySelector("#planningPickerClose");
+    const board = screen.querySelector(".planning-board");
+    const drawCanvas = screen.querySelector(".planning-draw-layer");
+    const drawCtx = drawCanvas.getContext("2d");
+    const drawBar = screen.querySelector("#planningDrawbar");
+    const DRAW_KEY = "LaBaseProfEditionProgrammazioneDisegnoV1";
+    let drawMode = null, activeStroke = null, drawHistory = [], drawFuture = [];
+    let drawStrokes = (() => { try { return JSON.parse(localStorage.getItem(DRAW_KEY) || "[]"); } catch (_) { return []; } })();
 
     const note = caricaNote();
     let stickerItems = caricaSticker();
@@ -499,6 +525,38 @@
       el.textContent = giorno;
       weekdays.appendChild(el);
     });
+
+    function saveDrawing() { try { localStorage.setItem(DRAW_KEY, JSON.stringify(drawStrokes)); } catch (_) {} }
+    function snapshotDrawing() { drawHistory.push(JSON.stringify(drawStrokes)); if (drawHistory.length > 30) drawHistory.shift(); drawFuture = []; }
+    function sizeDrawing() {
+      const r = board.getBoundingClientRect(), d = Math.max(1, window.devicePixelRatio || 1);
+      drawCanvas.width = Math.max(1, Math.round(r.width * d)); drawCanvas.height = Math.max(1, Math.round(r.height * d));
+      drawCanvas.style.width = r.width + "px"; drawCanvas.style.height = r.height + "px";
+      drawCtx.setTransform(d,0,0,d,0,0); renderDrawing();
+    }
+    function renderDrawing() {
+      const w=drawCanvas.clientWidth, h=drawCanvas.clientHeight; drawCtx.clearRect(0,0,w,h);
+      drawCtx.lineCap="round"; drawCtx.lineJoin="round";
+      drawStrokes.forEach(st => { drawCtx.globalCompositeOperation=st.erase?"destination-out":"source-over"; drawCtx.strokeStyle=st.color||"#26372d"; drawCtx.lineWidth=st.erase?20:2.6; drawCtx.beginPath(); (st.points||[]).forEach((q,i)=>{const x=q.x*w,y=q.y*h;i?drawCtx.lineTo(x,y):drawCtx.moveTo(x,y)}); drawCtx.stroke(); });
+      drawCtx.globalCompositeOperation="source-over";
+    }
+    function setDrawMode(mode) {
+      drawMode = drawMode === mode ? null : mode; board.classList.toggle("draw-active", !!drawMode);
+      drawBar.querySelectorAll('[data-draw="pen"],[data-draw="eraser"]').forEach(b=>b.classList.toggle("active", b.dataset.draw===drawMode));
+    }
+    function drawPoint(e){const r=drawCanvas.getBoundingClientRect();return{x:(e.clientX-r.left)/r.width,y:(e.clientY-r.top)/r.height}}
+    drawBar.addEventListener("click", e => {
+      const b=e.target.closest("button[data-draw]"); if(!b)return; const a=b.dataset.draw;
+      if(a==="pen"||a==="eraser") return setDrawMode(a);
+      if(a==="undo" && drawHistory.length){drawFuture.push(JSON.stringify(drawStrokes));drawStrokes=JSON.parse(drawHistory.pop());saveDrawing();renderDrawing();}
+      if(a==="redo" && drawFuture.length){drawHistory.push(JSON.stringify(drawStrokes));drawStrokes=JSON.parse(drawFuture.pop());saveDrawing();renderDrawing();}
+      if(a==="clear"){snapshotDrawing();drawStrokes=[];saveDrawing();renderDrawing();}
+    });
+    drawCanvas.addEventListener("pointerdown", e => { if(!drawMode)return; e.preventDefault(); snapshotDrawing(); activeStroke={erase:drawMode==="eraser",color:drawBar.querySelector('[data-draw="color"]').value,points:[drawPoint(e)]}; drawStrokes.push(activeStroke); try{drawCanvas.setPointerCapture(e.pointerId)}catch(_){} });
+    drawCanvas.addEventListener("pointermove", e => { if(!activeStroke)return; e.preventDefault(); activeStroke.points.push(drawPoint(e)); renderDrawing(); });
+    const finishDrawing=e=>{if(!activeStroke)return;activeStroke=null;saveDrawing();try{drawCanvas.releasePointerCapture(e.pointerId)}catch(_){}};
+    drawCanvas.addEventListener("pointerup",finishDrawing); drawCanvas.addEventListener("pointercancel",finishDrawing);
+    window.addEventListener("resize", sizeDrawing);
 
     function limita(n, min, max) {
       return Math.min(max, Math.max(min, n));
@@ -742,6 +800,7 @@
         event.stopImmediatePropagation();
         render();
         screen.classList.add("aperto");
+        requestAnimationFrame(sizeDrawing);
       },
       true
     );
